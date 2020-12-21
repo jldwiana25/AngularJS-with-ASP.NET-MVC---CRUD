@@ -3,11 +3,11 @@
 
     angular
         .module('app')
-        .controller('userCtrl', ['$scope', '$filter', 'dataService', function ($scope, $filter, dataService) {
+        .controller('userCtrl', ['$scope', '$filter', '$uibModal', 'dataService', function ($scope, $filter, $uibModal, dataService) {
             $scope.users = [];
             $scope.currentPage = 1;
             $scope.itemsPerPage = 5;
-
+            $scope.optionPage = ["1", "3", "5", "10", "15"]
             getData();
             function getData() {
                 dataService.getUsers().then(function (result) {
@@ -16,17 +16,47 @@
                     })
                 });
             }
-            $scope.deleteUser = function (id) {
-                  dataService.deleteUsers(id).then(function () {
-                    toastr.success('User deleted succesfully');
-                    getData();
-                }, function () {
-                    toastr.error('Error in deleting user with Id: ' + id);
-                });
-            };
+            //$scope.deleteUser = function (id) {
+            //      dataService.deleteUsers(id).then(function () {
+            //        toastr.success('User deleted succesfully');
+            //        getData();
+            //    }, function () {
+            //        toastr.error('Error in deleting user with Id: ' + id);
+            //    });
+            //};
             $scope.sortBy = function (column) {
                 $scope.sortColumn = column;
                 $scope.reverse = !$scope.reverse;
+            }
+            $scope.showFormModal = function (id) {
+                $scope.modalInstance = $uibModal.open({
+                    ariaLabelledBy: 'modal-title',
+                    ariaDescribedBy: 'modal-body',
+                    templateUrl: 'app/templates/view.html',
+                    controller: 'ModalHandleCtrl',
+                    controllerAs: '$scope',
+                    size: 'sm',
+                    resolve: {
+
+                    }
+                });
+                console.log("delete id" + id)
+            };
+        }])
+        .controller('ModalHandleCtrl', ['$scope', '$uibModalInstance', 'dataService', function ($scope, $uibModalInstance, dataService) {
+            $scope.cancelModal = function () {
+                console.log("cancelModal");
+                $uibModalInstance.dismiss('cancel');
+            }
+            $scope.ok = function (id) {
+                //$scope.deleteUser = function (id) {
+                    dataService.deleteUsers(id).then(function () {
+                        toastr.success('User deleted succesfully');
+                        getData();
+                    }, function () {
+                        toastr.error('Error in deleting user with Id: ' + user.id);
+                    });
+                //};
             }
         }])
         .controller('userAddCtrl', ['$scope', '$location', 'dataService', function ($scope, $location, dataService) {
@@ -53,7 +83,7 @@
                     toastr.success("User updated successfully")
                     $location.path('/');
                 }, function () {
-                    toastr.error('Error in updateing user')
+                    toastr.error('Error in updating user')
                 });
             };
         }]);

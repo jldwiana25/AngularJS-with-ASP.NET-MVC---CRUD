@@ -1,85 +1,89 @@
-﻿<h2>Users</h2>
-<p>
-    <a href="#/addUser" class="btn btn-primary" style="float:right">Add New</a>
-    <br/>
-</p>
-<br/>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        List User
+﻿<div class="container-fluid">
+    <h2>Users</h2>
+    <p>
+        <a href="#/addUser" class="btn btn-primary" style="float:right">Add New</a>
+        <br />
+    </p>
+    <br />
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            List User
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group pull-left">
+                        <label>Search :</label>
+                        <label>
+                            <input type="text" class="form-control" ng-model="searchText" style="font-weight:normal" />
+                        </label>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group pull-right">
+                        Show:
+                        <label>
+                            <select class="form-control" ng-model="itemsPerPage" style="font-weight:normal">
+                                <option ng-value="5">---Please select---</option>
+                                <option  ng-repeat="option in optionPage" >{{option}}</option>
+                                <!--<option ng-value="1">1</option>
+                                <option ng-value="2">2</option>
+                                <option ng-value="5">5</option>
+                                <option ng-value="10">10</option>
+                                <option ng-value="25">25</option>-->
+                            </select>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th ng-click="sortBy('Name')">
+                            Name
+                            <span class="glyphicon" ng-show="sortColumn=='Name'" ng-class="{'glyphicon-sort-by-alphabet': !reverse, 'glyphicon-sort-by-alphabet-alt':reverse}" style="float:right"></span>
+                        </th>
+                        <th ng-click="sortBy('Email')">
+                            Email
+                            <span class="glyphicon" ng-show="sortColumn=='Email'" ng-class="{'glyphicon-sort-by-alphabet': !reverse, 'glyphicon-sort-by-alphabet-alt':reverse}" style="float:right"></span>
+                        </th>
+                        <th ng-click="sortBy('Address')">
+                            Address
+                            <span class="glyphicon" ng-show="sortColumn=='Address'" ng-class="{'glyphicon-sort-by-alphabet': !reverse, 'glyphicon-sort-by-alphabet-alt':reverse}" style="float:right"></span>
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="i in users | orderBy: sortColumn: reverse | limitTo: itemsPerPage: (currentPage - 1) * itemsPerPage">
+                        <td>{{i.Name}}</td>
+                        <td>{{i.Email}}</td>
+                        <td>{{i.Address}}</td>
+                        <td>
+                            <a href="#/editUser/{{i.Id}}">Edit</a> |
+                            <a href="" ng-click="showFormModal(i.Id)" data-toggle="modal">Delete</a>
+                        </td>
+                    </tr>
+                    <tr ng-if="!users || users.length == 0">
+                        <td colspan="4" style="text-align:center">
+                            No user data to display
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="pull-left">
+                        <br />
+                        <pre class="small">Page: {{currentPage}}/{{numPages}}</pre>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="pull-right">
+                        <ul uib-pagination total-items="users.length" items-per-page="itemsPerPage" ng-model="currentPage" max-size="5" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo" ;></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="form-group pull-left">
-                    <label>Search :</label>
-                    <label>
-                        <input type="text" class="form-control" ng-model="searchText" style="font-weight:normal"/>
-                    </label>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="form-group pull-right">
-                    Show: 
-                    <label>
-                        <select class="form-control" ng-model="itemsPerPage" style="font-weight:normal">
-                            <option ng-value="1">1</option>
-                            <option ng-value="2">2</option>
-                            <option ng-value="5">5</option>
-                            <option ng-value="10">10</option>
-                            <option ng-value="25">25</option>
-                        </select>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th ng-click="sortBy('Name')">
-                        Name
-                        <span class="glyphicon" ng-show="sortColumn=='Name'" ng-class="{'glyphicon-sort-by-alphabet': !reverse, 'glyphicon-sort-by-alphabet-alt':reverse}" style="float:right"></span>
-                    </th>
-                    <th ng-click="sortBy('Email')">
-                        Email
-                        <span class="glyphicon" ng-show="sortColumn=='Email'" ng-class="{'glyphicon-sort-by-alphabet': !reverse, 'glyphicon-sort-by-alphabet-alt':reverse}" style="float:right"></span>
-                    </th>
-                    <th ng-click="sortBy('Address')">
-                        Address
-                        <span class="glyphicon" ng-show="sortColumn=='Address'" ng-class="{'glyphicon-sort-by-alphabet': !reverse, 'glyphicon-sort-by-alphabet-alt':reverse}" style="float:right"></span>
-                    </th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="i in users | orderBy: sortColumn: reverse | limitTo: itemsPerPage: (currentPage - 1) * itemsPerPage">
-                    <td>{{i.Name}}</td>
-                    <td>{{i.Email}}</td>
-                    <td>{{i.Address}}</td>
-                    <td>
-                        <a href="#/editUser/{{i.Id}}">Edit</a> |
-                        <a href="" ng-click="deleteUser(i.Id)">Delete</a>
-                    </td>
-                </tr>
-                <tr ng-if="!users || users.length == 0">
-                    <td colspan="4" style="text-align:center">
-                        No user data to display
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="pull-left">
-                    <br />
-                    <pre class="small">Page: {{currentPage}}/{{numPages}}</pre>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="pull-right">
-                    <ul uib-pagination total-items="users.length" items-per-page="itemsPerPage" ng-model="currentPage" max-size="5" boundary-links="true" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo";></ul>
-                </div>
-            </div>
-        </div>
-    </div> 
 </div>
